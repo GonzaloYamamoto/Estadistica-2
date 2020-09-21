@@ -1,0 +1,13 @@
+```{r}
+names(PBI)
+names(carbon)
+names(free)
+names(democracy)
+```
+
+```{r}
+PBIcarbon3=merge(PBI,carbon,by.x  ='pais', by.y='pais')
+PBIcarbonfree3=merge(PBIcarbon3,free,by.x='pais',by.y='pais')
+PBIcarbonfreedemo3=merge(PBIcarbonfree3,democracy,by.x='pais',by.y='pais')
+```
+
