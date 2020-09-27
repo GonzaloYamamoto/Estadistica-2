@@ -1,0 +1,67 @@
+
+
+```{r}
+library(htmltab)
+library(readr)
+```
+
+
+```{r}
+linkPBI2= "https://www.cia.gov/library/publications/resources/the-world-factbook/fields/211rank.html"
+PBIpath2= '//*[@id="rankOrder"]'
+PBI2= htmltab(doc=linkPBI2,
+             which=PBIpath2)
+```
+
+```{r}
+PBI2[1]=NULL
+```
+
+```{r}
+names(PBI2)=c("País","GDP (CIA)")
+```
+
+
+```{r}
+PBI2$'GDP (CIA)'=gsub("\\$|\\,", "", PBI2$'GDP (CIA)')
+PBI2[3]=NULL
+PBI2$`GDP (CIA)`=as.numeric(PBI2$`GDP (CIA)`)
+```
+
+```{r}
+PBI1link="https://www.cia.gov/library/publications/resources/the-world-factbook/fields/208rank.html"
+PBI1path='//*[@id="rankOrder"]'
+PBI1=htmltab(PBI1link, PBI1path)
+```
+```{r}
+PBI1[1]=NULL
+PBI1[3]=NULL
+names(PBI1)=c("País","PBI PPA")
+PBI1$`PBI PPA`=parse_number(PBI1$`PBI PPA`)
+```
+
+```{r}
+desempleolink="https://www.cia.gov/library/publications/the-world-factbook/fields/220.html"
+desempleopath='//*[@id="fieldListing"]'
+desempleo=htmltab(desempleolink,desempleopath)
+```
+```{r}
+names(desempleo)=c("País","% desempleo")
+desempleo$`% desempleo`=parse_number(desempleo$`% desempleo`)
+```
+
+```{r}
+PBI1$País=trimws(PBI1$País,whitespace = "[\\h\\v]")
+PBI2$País=trimws(PBI2$País,whitespace = "[\\h\\v]")
+desempleo$País=trimws(desempleo$País,whitespace = "[\\h\\v]" )
+```
+
+```{r}
+ECONOMICO=merge(PBI1,PBI2,all.x=T,all.y=T)
+ECONOMICO=merge(ECONOMICO,desempleo,all.x = T,all.y = T)
+```
+
+```{r}
+write.csv(ECONOMICO,"ECONOMICO.csv", row.names = F)
+```
+
